@@ -1,0 +1,13 @@
+name: astrbot_plugin_rei_isittrue
+display_name: 绫波丽 · 是真的吗
+short_desc: 引用消息或 @机器人问「真的吗」，绫波丽举牌判定真假。
+desc: 群聊事实核查插件（绫波丽主题）。引用消息或 @机器人说出想核实的内容，AI 判断真假；判定为真/假时发送绫波丽举牌图片，支持图片识别、合并转发、模型回退，以及 DeepSeek 搜索 API、AnySearch API 等联网检索渠道。
+version: v2.0.0
+author: AieXile
+repo: https://github.com/AieXile/astrbot_plugin_rei_isittrue
+support_platforms:
+  - aiocqhttp
+  - qq_official
+  - telegram
+  - lark
+astrbot_version: ">=4.10.4,<5"

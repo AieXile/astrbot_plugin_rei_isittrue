@@ -1,0 +1,242 @@
+{
+  "cooldown": {
+    "description": "冷却时间（秒）",
+    "type": "int",
+    "default": 10,
+    "slider": {"min": 0, "max": 300, "step": 5},
+    "hint": "按用户 ID 分别计时，0 表示不限制。"
+  },
+  "trigger_phrases": {
+    "description": "触发词",
+    "type": "list",
+    "default": ["真的吗"],
+    "hint": "命中任一触发词即触发；支持英文（按词边界匹配）与中文。"
+  },
+  "listen_suffix": {
+    "description": "监听触发词结尾",
+    "type": "bool",
+    "default": false,
+    "hint": "开启后无需 @机器人，消息以触发词结尾即可（兼容？/）。"
+  },
+  "listen_prefix": {
+    "description": "监听触发词开头",
+    "type": "bool",
+    "default": false
+  },
+  "group_blacklist": {
+    "description": "群黑名单",
+    "type": "list",
+    "default": [],
+    "hint": "填群号，这些群不响应。"
+  },
+  "review_backend": {
+    "description": "审查模型来源",
+    "type": "string",
+    "default": "astrbot",
+    "options": ["astrbot", "deepseek"],
+    "labels": ["AstrBot Provider", "DeepSeek 直连（填 Key）"],
+    "hint": "AstrBot Provider 使用框架里配置的模型；DeepSeek 直连使用下方 API Key，不依赖框架 Provider。"
+  },
+  "provider_id": {
+    "description": "AstrBot 模型 Provider",
+    "type": "string",
+    "default": "",
+    "_special": "select_provider",
+    "hint": "留空使用 AstrBot 当前默认对话模型。"
+  },
+  "provider_fallbacks": {
+    "description": "模型回退链",
+    "type": "list",
+    "default": [],
+    "hint": "填 AstrBot 的 Provider ID（列表）；主模型失败后按顺序尝试，每个模型会先带图、再剥图重试。"
+  },
+  "deepseek_api_key": {
+    "description": "DeepSeek API Key",
+    "type": "string",
+    "default": "",
+    "secret": true,
+    "obvious_hint": true,
+    "hint": "审查模型选 DeepSeek 直连时必填；同时作为 DeepSeek 搜索的默认 Key。"
+  },
+  "deepseek_base_url": {
+    "description": "DeepSeek Base URL",
+    "type": "string",
+    "default": "https://api.deepseek.com"
+  },
+  "deepseek_model": {
+    "description": "DeepSeek 审查模型",
+    "type": "string",
+    "default": "deepseek-flash",
+    "hint": "按 DeepSeek 文档填写模型名，例如 deepseek-flash、deepseek-v4-pro。"
+  },
+  "deepseek_timeout": {
+    "description": "DeepSeek 请求超时（秒）",
+    "type": "int",
+    "default": 60,
+    "slider": {"min": 10, "max": 180, "step": 5}
+  },
+  "enable_vision": {
+    "description": "启用图片分析",
+    "type": "bool",
+    "default": true,
+    "hint": "需要模型支持多模态；不支持时插件会自动剥图重试。DeepSeek 文本模型默认会剥图。"
+  },
+  "enable_web_search": {
+    "description": "启用联网搜索",
+    "type": "bool",
+    "default": true,
+    "hint": "核查前先检索资料，时效类内容更准；关闭则仅凭模型知识判断。"
+  },
+  "search_provider": {
+    "description": "搜索渠道",
+    "type": "string",
+    "default": "auto",
+    "options": ["auto", "deepseek", "anysearch", "tavily", "bocha", "baidu_ai_search", "brave", "firecrawl", "none"],
+    "labels": ["自动", "DeepSeek 搜索", "AnySearch", "Tavily", "博查", "百度 AI 搜索", "Brave", "Firecrawl", "关闭"],
+    "hint": "自动模式按 DeepSeek 搜索 → Tavily → AnySearch → 框架内置工具的优先顺序降级。"
+  },
+  "deepseek_search_key": {
+    "description": "DeepSeek 搜索 Key",
+    "type": "string",
+    "default": "",
+    "secret": true,
+    "hint": "留空则复用 DeepSeek API Key。DeepSeek 搜索接口为 /v1/tools/search，按请求次数计费。"
+  },
+  "deepseek_search_count": {
+    "description": "DeepSeek 搜索条数",
+    "type": "int",
+    "default": 5,
+    "slider": {"min": 1, "max": 20, "step": 1}
+  },
+  "deepseek_search_content": {
+    "description": "DeepSeek 搜索抓取正文",
+    "type": "bool",
+    "default": true,
+    "hint": "开启后返回网页正文（need_content），资料更完整但响应更慢。"
+  },
+  "anysearch_api_key": {
+    "description": "AnySearch API Key",
+    "type": "string",
+    "default": "",
+    "secret": true,
+    "hint": "填写后直接调用 AnySearch /v1/search，无需安装 anysearch 插件。"
+  },
+  "anysearch_endpoint": {
+    "description": "AnySearch 接口地址",
+    "type": "string",
+    "default": "https://api.anysearch.com/v1/search"
+  },
+  "anysearch_zone": {
+    "description": "AnySearch 区域",
+    "type": "string",
+    "default": "",
+    "hint": "填 cn 或 intl，留空表示不指定。"
+  },
+  "anysearch_language": {
+    "description": "AnySearch 语言偏好",
+    "type": "string",
+    "default": "",
+    "hint": "例如 zh-CN、en，留空不指定。"
+  },
+  "max_search_results": {
+    "description": "每个查询展示条数",
+    "type": "int",
+    "default": 5,
+    "slider": {"min": 1, "max": 10, "step": 1}
+  },
+  "max_search_queries": {
+    "description": "最多搜索词数量",
+    "type": "int",
+    "default": 2,
+    "slider": {"min": 1, "max": 3, "step": 1}
+  },
+  "search_timeout": {
+    "description": "搜索超时（秒）",
+    "type": "int",
+    "default": 30,
+    "slider": {"min": 5, "max": 120, "step": 5}
+  },
+  "max_content_chars": {
+    "description": "待核内容最大字符数",
+    "type": "int",
+    "default": 2500,
+    "slider": {"min": 200, "max": 10000, "step": 100}
+  },
+  "max_search_chars": {
+    "description": "搜索资料写入上限",
+    "type": "int",
+    "default": 2000,
+    "slider": {"min": 200, "max": 10000, "step": 100}
+  },
+  "max_forward_depth": {
+    "description": "合并转发最大层数",
+    "type": "int",
+    "default": 4,
+    "slider": {"min": 1, "max": 8, "step": 1}
+  },
+  "max_forward_nodes": {
+    "description": "合并转发最大节点数",
+    "type": "int",
+    "default": 40,
+    "slider": {"min": 1, "max": 100, "step": 1}
+  },
+  "max_forward_images": {
+    "description": "合并转发最多图片数",
+    "type": "int",
+    "default": 8,
+    "slider": {"min": 0, "max": 20, "step": 1}
+  },
+  "persona": {
+    "description": "回复人设",
+    "type": "string",
+    "default": "rei",
+    "options": ["rei", "plain"],
+    "labels": ["绫波丽", "普通"],
+    "hint": "绫波丽模式使用简短、克制的台词风格；普通模式沿用原文案。"
+  },
+  "true_label": {
+    "description": "判定为真文案",
+    "type": "string",
+    "default": "……是真的。"
+  },
+  "false_label": {
+    "description": "判定为假文案",
+    "type": "string",
+    "default": "……是假的。"
+  },
+  "unknown_label": {
+    "description": "无法核实文案",
+    "type": "string",
+    "default": "……我不知道。"
+  },
+  "send_verdict_image": {
+    "description": "发送判定图片",
+    "type": "bool",
+    "default": true,
+    "hint": "真/假时附带绫波丽举牌图片；无法核实时只发文字。"
+  },
+  "true_image_path": {
+    "description": "自定义「真」图片",
+    "type": "string",
+    "default": "",
+    "hint": "留空使用内置 assets/verdict_true.png。可填本地绝对路径。"
+  },
+  "false_image_path": {
+    "description": "自定义「假」图片",
+    "type": "string",
+    "default": "",
+    "hint": "留空使用内置 assets/verdict_false.png。"
+  },
+  "system_prompt": {
+    "description": "审查系统提示词",
+    "type": "text",
+    "default": "",
+    "hint": "留空使用内置提示词（已包含严格输出格式要求）。"
+  },
+  "plan_prompt": {
+    "description": "检索规划提示词",
+    "type": "text",
+    "default": "",
+    "hint": "留空使用内置提示词。"
+  }
+}
